@@ -3,10 +3,10 @@ html {
 }
 
 body {
-  	min-width: 500px;
+  min-width: 500px;
 	max-width: 960px;
 	width: 60%;
-  	margin: auto;
+  margin: auto;
 	font-family: 'helvetica';
 }
 
@@ -18,4 +18,8 @@ h1{
 
 p{
 	display: inline;
+}
+
+.submitUsernameForm {
+	text-align: center;
 }
