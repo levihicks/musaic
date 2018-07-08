@@ -1,5 +1,6 @@
 html {
 	height: 100%;
+	background: #96ceb4;
 }
 
 body {
@@ -14,12 +15,25 @@ h1{
 	margin: auto;
 	max-width: 600px;
 	text-align: center;
+	color: #ffeead;
+	font-style: italic;
+	margin-top: 15px;
+	font-size: 48px;
 }
-
-p{
-	display: inline;
-}
-
-.submitUsernameForm {
+.submitUsername {
 	text-align: center;
+	margin-top: 5px;
+}
+
+#username{
+	width: 30%;
+	background: #ffcc5c;
+	border: none;
+	height: 25px;
+}
+
+input[type=submit]{
+	background: #ff6f69;
+	border: none;
+	height: 25px;
 }
