@@ -46,3 +46,7 @@ input[type=button]{
 	text-align: center;
 	margin-top: 30px;
 }
+
+.select{
+	background: #eaece5;
+}
