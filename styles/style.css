@@ -22,14 +22,13 @@ h1{
 .submitUsername {
 	text-align: center;
 	margin-top: 15px;
-	
 }
 
 #username{
 	width: 30%;
 	background: #eaece5;
 	border: none;
-	height: 25px;
+  height: 25px;
 	font-family: inherit;
 	color: #3b3a30;
 }
@@ -37,7 +36,6 @@ h1{
 input[type=button]{
 	background: #c0ded9;
 	border: none;
-	height: 25px;
 	font-family: inherit;
 	color: #3b3a30;
 }
@@ -47,6 +45,11 @@ input[type=button]{
 	margin-top: 30px;
 }
 
-.select{
-	background: #eaece5;
+select{
+	background-color: #eaece5;
+	border: 1px solid #ffeead;
+}
+
+select, input[type=button]{
+	height: 27px;
 }
