@@ -10,7 +10,7 @@ musaicCanvas.setAttribute('height', '522');
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
-var imagesLoaded = 0;
+var imagesLoaded;
 function createMusaic(){
 	imagesLoaded=0;
 	submitText = submitInput.value
@@ -25,14 +25,8 @@ function createMusaic(){
 		var results = request.response['topalbums']['album'];
 	    for (var i = 0; i < 9; i++){
 	    	images[i] = new Image();
-	    	if (results[i]['image'][2]['#text']=="")
-	    		images[i].src="./images/notfound.png";
-	    	else
-	    		images[i].src = results[i]['image'][2]['#text'];
-	    	if (images[i].src=="")
-	    		imageLoaded();
-	    	else
-	    		images[i].onload = imageLoaded;
+	    	images[i].src = (results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
+	    	images[i].onload = imageLoaded;
 	    }
 	};
 }
@@ -45,6 +39,6 @@ function imageLoaded(){
 
 function drawMusaicImage(){
 	for(var i = 0; i < 9; i++){
-	ctx.drawImage(images[i], (i % 3) * 174,  Math.floor(i/3) * 174);
+		ctx.drawImage(images[i], (i % 3) * 174,  Math.floor(i/3) * 174);
 	}
 }
