@@ -5,6 +5,7 @@ var submitButton = document.querySelector('input[name=submit]');
 var collageDiv = document.querySelector('.collage');
 var musaicCanvas = document.createElement('canvas');
 var sizeChoice = document.querySelector('select[name=size]');
+var dateRangeChoice = document.querySelector('select[name=dateRange]');
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
@@ -19,7 +20,8 @@ function createMusaic(){
 	imagesLoaded=0;
 	submitText = submitInput.value;
 	var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=' + 
-	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&format=json';
+	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
+	'&period='+dateRangeChoice.value+'&format=json';
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
 	request.responseType = 'json';
