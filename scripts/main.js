@@ -4,7 +4,8 @@ var body = document.querySelector('body');
 var submitButton = document.querySelector('input[name=submit]');
 var collageDiv = document.querySelector('.collage');
 var musaicCanvas = document.createElement('canvas');
-var sizeChoice = document.querySelector('select[name=size]');
+var rows = document.querySelector('select[name=rows]');
+var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
@@ -13,10 +14,10 @@ var imagesLoaded;
 var imagesToLoad;
 var perRow;
 function createMusaic(){
-	imagesToLoad = sizeChoice.value;
-	perRow = Math.sqrt(imagesToLoad);
-	musaicCanvas.setAttribute('width', 174*perRow);
-	musaicCanvas.setAttribute('height', 174*perRow);
+	imagesToLoad = rows.value*columns.value;
+	console.log(imagesToLoad);
+	musaicCanvas.setAttribute('width', 174*columns.value);
+	musaicCanvas.setAttribute('height', 174*rows.value);
 	imagesLoaded=0;
 	submitText = submitInput.value;
 	var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=' + 
@@ -44,6 +45,7 @@ function imageLoaded(){
 
 function drawMusaicImage(){
 	for(var i = 0; i < imagesToLoad; i++){
-		ctx.drawImage(images[i], (i % perRow) * 174,  Math.floor(i/perRow) * 174);
+		ctx.drawImage(images[i], (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
+		console.log((i%columns.value)*174+', '+Math.floor(i/columns.value)*174);
 	}
 }
