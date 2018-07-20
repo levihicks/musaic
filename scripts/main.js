@@ -20,7 +20,7 @@ function createMusaic(){
 	musaicCanvas.setAttribute('height', 174*rows.value);
 	imagesLoaded=0;
 	submitText = submitInput.value;
-	var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=' + 
+	var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=' + 
 	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
 	'&period='+dateRangeChoice.value+'&format=json';
 	var request = new XMLHttpRequest();
