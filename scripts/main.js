@@ -15,7 +15,6 @@ var imagesToLoad;
 var perRow;
 function createMusaic(){
 	imagesToLoad = rows.value*columns.value;
-	console.log(imagesToLoad);
 	musaicCanvas.setAttribute('width', 174*columns.value);
 	musaicCanvas.setAttribute('height', 174*rows.value);
 	imagesLoaded=0;
@@ -46,6 +45,5 @@ function imageLoaded(){
 function drawMusaicImage(){
 	for(var i = 0; i < imagesToLoad; i++){
 		ctx.drawImage(images[i], (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
-		console.log((i%columns.value)*174+', '+Math.floor(i/columns.value)*174);
 	}
 }
