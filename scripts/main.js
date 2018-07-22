@@ -10,7 +10,10 @@ var rows = document.querySelector('select[name=rows]');
 var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
 var loadingPara = document.createElement('p');
+
 loadingPara.appendChild(document.createTextNode('Loading...'));
+var invalidUsernamePara = document.createElement('p');
+invalidUsernamePara.appendChild(document.createTextNode('Invalid username, check input and try again...'));
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
@@ -22,6 +25,24 @@ submitInput.addEventListener("keyup", function(event) {
         submitButton.click();
 	}
 });
+
+var re = /^[a-z|A-Z][a-z|A-Z|\d|_|-]{0,14}$/;
+
+function checkInput(){
+	if(re.test(submitInput.value)){
+		removeMessages();
+		createMusaic();
+	}
+	else
+		body.insertBefore(invalidUsernamePara, body.children[2]);
+}
+
+function removeMessages(){
+	if(body.children[2] != document.querySelector('.collage')){
+		body.removeChild(body.children[2]);
+	}
+}
+
 function createMusaic(){
 	body.insertBefore(loadingPara, body.children[2]);
 	imagesToLoad = rows.value*columns.value;
