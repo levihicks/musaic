@@ -14,6 +14,11 @@ var loadingPara = document.createElement('p');
 loadingPara.appendChild(document.createTextNode('Loading...'));
 var invalidUsernamePara = document.createElement('p');
 invalidUsernamePara.appendChild(document.createTextNode('Invalid username, check input and try again...'));
+var enterRowsPara = document.createElement('p');
+enterRowsPara.appendChild(document.createTextNode('Choose how many rows.'));
+var enterColumnsPara = document.createElement('p');
+enterColumnsPara.appendChild(document.createTextNode('Choose how many columns.'));
+
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
@@ -27,11 +32,20 @@ submitInput.addEventListener("keyup", function(event) {
 });
 
 var re = /^[a-z|A-Z][a-z|A-Z|\d|_|-]{0,25}$/;
+var re2 = /\d/;
 
 function checkInput(){
+	removeMessages();
 	if(re.test(submitInput.value)){
-		removeMessages();
-		createMusaic();
+		if(re2.test(rows.value)){
+			if(re2.test(columns.value)){
+				createMusaic();
+			}
+			else
+				body.insertBefore(enterColumnsPara, body.children[2]);
+		}
+		else
+			body.insertBefore(enterRowsPara, body.children[2]);
 	}
 	else
 		body.insertBefore(invalidUsernamePara, body.children[2]);
