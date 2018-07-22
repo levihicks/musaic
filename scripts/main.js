@@ -26,7 +26,7 @@ submitInput.addEventListener("keyup", function(event) {
 	}
 });
 
-var re = /^[a-z|A-Z][a-z|A-Z|\d|_|-]{0,14}$/;
+var re = /^[a-z|A-Z][a-z|A-Z|\d|_|-]{0,25}$/;
 
 function checkInput(){
 	if(re.test(submitInput.value)){
