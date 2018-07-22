@@ -34,12 +34,15 @@ submitInput.addEventListener("keyup", function(event) {
 var re = /^[a-z|A-Z][a-z|A-Z|\d|_|-]{0,25}$/;
 var re2 = /\d/;
 
+var loadUnderway = false;
+
 function checkInput(){
 	removeMessages();
 	if(re.test(submitInput.value)){
 		if(re2.test(rows.value)){
 			if(re2.test(columns.value)){
-				createMusaic();
+				if(!loadUnderway)
+					createMusaic();
 			}
 			else
 				body.insertBefore(enterColumnsPara, body.children[2]);
@@ -52,12 +55,13 @@ function checkInput(){
 }
 
 function removeMessages(){
-	if(body.children[2] != document.querySelector('.collage')){
+	if(body.children[2] != document.querySelector('.collage') && body.children[2]!=loadingPara){
 		body.removeChild(body.children[2]);
 	}
 }
 
 function createMusaic(){
+	loadUnderway=true;
 	body.insertBefore(loadingPara, body.children[2]);
 	imagesToLoad = rows.value*columns.value;
 	musaicCanvas.setAttribute('width', 174*columns.value);
@@ -86,6 +90,7 @@ function createMusaic(){
 function imageLoaded(){
 	imagesLoaded+=1;
 	if (imagesLoaded == imagesToLoad){
+		loadUnderway=false;
 		body.removeChild(loadingPara);
 	    drawMusaicImage();
 	}
