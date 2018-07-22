@@ -1,5 +1,7 @@
 var submitInput = document.getElementById('username');
 var submitText;
+var submitButton = document.querySelector('button[value=Submit');
+var form = document.querySelector('.submitUsername');
 var body = document.querySelector('body');
 var submitButton = document.querySelector('input[name=submit]');
 var collageDiv = document.querySelector('.collage');
@@ -15,6 +17,11 @@ var images = [];
 var imagesLoaded;
 var imagesToLoad;
 var perRow;
+submitInput.addEventListener("keyup", function(event) {
+	if (event.keyCode === 13){
+        submitButton.click();
+	}
+});
 function createMusaic(){
 	body.insertBefore(loadingPara, body.children[2]);
 	imagesToLoad = rows.value*columns.value;
@@ -38,6 +45,8 @@ function createMusaic(){
 	    }
 	};
 }
+
+
 
 function imageLoaded(){
 	imagesLoaded+=1;
