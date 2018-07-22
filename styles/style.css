@@ -54,6 +54,10 @@ select, input[type=button]{
 	height: 27px;
 }
 
+canvas{
+	margin-bottom: 50px;
+}
+
 p {
 	text-align: center;
 	background: #eaece5;
