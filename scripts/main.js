@@ -7,6 +7,8 @@ var musaicCanvas = document.createElement('canvas');
 var rows = document.querySelector('select[name=rows]');
 var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
+var loadingPara = document.createElement('p');
+loadingPara.appendChild(document.createTextNode('Loading...'));
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
@@ -14,6 +16,7 @@ var imagesLoaded;
 var imagesToLoad;
 var perRow;
 function createMusaic(){
+	body.insertBefore(loadingPara, body.children[2]);
 	imagesToLoad = rows.value*columns.value;
 	musaicCanvas.setAttribute('width', 174*columns.value);
 	musaicCanvas.setAttribute('height', 174*rows.value);
@@ -38,8 +41,10 @@ function createMusaic(){
 
 function imageLoaded(){
 	imagesLoaded+=1;
-	if (imagesLoaded == imagesToLoad)
+	if (imagesLoaded == imagesToLoad){
+		body.removeChild(loadingPara);
 	    drawMusaicImage();
+	}
 }
 
 function drawMusaicImage(){
