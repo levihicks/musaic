@@ -10,7 +10,6 @@ var rows = document.querySelector('select[name=rows]');
 var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
 var loadingPara = document.createElement('p');
-
 loadingPara.appendChild(document.createTextNode('Loading...'));
 var invalidUsernamePara = document.createElement('p');
 invalidUsernamePara.appendChild(document.createTextNode('Invalid username, check input and try again...'));
@@ -18,7 +17,6 @@ var enterRowsPara = document.createElement('p');
 enterRowsPara.appendChild(document.createTextNode('Choose how many rows.'));
 var enterColumnsPara = document.createElement('p');
 enterColumnsPara.appendChild(document.createTextNode('Choose how many columns.'));
-
 collageDiv.appendChild(musaicCanvas);
 var ctx = musaicCanvas.getContext('2d');
 var images = [];
@@ -75,14 +73,26 @@ function createMusaic(){
 	request.open('GET', requestURL);
 	request.responseType = 'json';
 	request.send();
-	request.onload = function(submitText) {
-		var results = request.response['topalbums']['album'];
+	request.onload = function() {
+		(request.response['error'])?displayError(request):loadImages(request);
+	};
+}
+
+function displayError(request){
+	body.removeChild(loadingPara);
+	var errorPara = document.createElement('p');
+	errorPara.appendChild(document.createTextNode('Error: '+request.response['message']));
+	body.insertBefore(errorPara, body.children[2]);
+	loadUnderway=false;
+}
+
+function loadImages(request){
+	var results = request.response['topalbums']['album'];
 	    for (var i = 0; i < imagesToLoad; i++){
 	    	images[i] = new Image();
 	    	images[i].src = (results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
 	    	images[i].onload = imageLoaded;
 	    }
-	};
 }
 
 
