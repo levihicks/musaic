@@ -43,6 +43,7 @@ input[type=button]{
 .collage {
 	text-align: center;
 	margin-top: 30px;
+	min-height: 600px;
 }
 
 select{
@@ -56,6 +57,28 @@ select, input[type=button]{
 
 canvas{
 	margin-bottom: 50px;
+}
+
+footer{
+	width: 900px;
+	text-align: center;
+}
+
+.credits{
+	width: 250px;
+	margin: 0 auto;
+	border-top: 1px solid #ffeead;
+	border-bottom: 1px solid #ffeead;
+	padding-bottom: 5px;
+	color: whitesmoke;
+}
+
+a{
+	color: #c0ded9;
+}
+
+a:visited{
+	color: tomato;
 }
 
 p {
