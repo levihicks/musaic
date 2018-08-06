@@ -95,7 +95,7 @@ function loadImages(request){
 	var results = request.response[typeString1][typeString2];
 	    for (var i = 0; i < imagesToLoad; i++){
 	    	images[i] = new Image();
-	    	images[i].src = (results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
+	    	images[i].src = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
 	    	images[i].onload = imageLoaded;
 	    }
 }
