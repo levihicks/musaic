@@ -9,6 +9,7 @@ var musaicCanvas = document.createElement('canvas');
 var rows = document.querySelector('select[name=rows]');
 var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
+var musaicType = document.querySelector('select[name=type]');
 var loadingPara = document.createElement('p');
 loadingPara.appendChild(document.createTextNode('Loading...'));
 var invalidUsernamePara = document.createElement('p');
@@ -66,9 +67,10 @@ function createMusaic(){
 	musaicCanvas.setAttribute('height', 174*rows.value);
 	imagesLoaded=0;
 	submitText = submitInput.value;
-	var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=' + 
+	var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettop'+musaicType.value+'&user=' + 
 	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
 	'&period='+dateRangeChoice.value+'&format=json';
+	console.log(requestURL);
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
 	request.responseType = 'json';
@@ -87,7 +89,10 @@ function displayError(request){
 }
 
 function loadImages(request){
-	var results = request.response['topalbums']['album'];
+	var typeString1 = 'top'+musaicType.value;
+	var typeString2 = musaicType.value;
+	typeString2=typeString2.slice(0, -1);
+	var results = request.response[typeString1][typeString2];
 	    for (var i = 0; i < imagesToLoad; i++){
 	    	images[i] = new Image();
 	    	images[i].src = (results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
