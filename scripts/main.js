@@ -6,8 +6,6 @@ function artist(image, artistName, plays){
 	this.plays = plays;
 }
 
-
-
 function album(image, albumName, artistName, plays){
 	artist.call(this, image, artistName, plays);
 	this.albumName = albumName;
@@ -30,6 +28,8 @@ var rows = document.querySelector('select[name=rows]');
 var columns = document.querySelector('select[name=columns]');
 var dateRangeChoice = document.querySelector('select[name=dateRange]');
 var musaicType = document.querySelector('select[name=type]');
+var captionsOption = document.getElementById('captionsOption');
+var playsOption = document.getElementById('playsOption');
 var loadingPara = document.createElement('p');
 loadingPara.appendChild(document.createTextNode('Loading...'));
 var invalidUsernamePara = document.createElement('p');
@@ -141,22 +141,27 @@ function imageLoaded(){
 function drawMusaicImage(){
 	for(var i = 0; i < imagesToLoad; i++){
 		ctx.drawImage(albums[i].image, (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
+		var offset=0;
 		ctx.font='13px arial';
 		ctx.strokeStyle='black';
 		ctx.lineWidth=3;
 		ctx.lineJoin = 'round';
 		ctx.textBaseline="hanging";
-		ctx.strokeText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
 		ctx.fillStyle='white';
-		ctx.fillText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
-		var offset=1;
-		if(albums[i].albumName){
-			ctx.strokeText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
-			ctx.fillText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+		if(captionsOption.checked){	
+			ctx.strokeText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
+			ctx.fillText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
 			offset+=1;
+			if(albums[i].albumName){
+				ctx.strokeText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+				ctx.fillText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+				offset+=1;
+			}
 		}
-		playsString='Plays: '+albums[i].plays;
-		ctx.strokeText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
-		ctx.fillText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
+		if(playsOption.checked){
+			playsString='Plays: '+albums[i].plays;
+			ctx.strokeText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
+			ctx.fillText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
+		}
 	}
 }
