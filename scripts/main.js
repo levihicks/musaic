@@ -24,6 +24,7 @@ var images = [];
 var imagesLoaded;
 var imagesToLoad;
 var perRow;
+var infoStrings = [];
 submitInput.addEventListener("keyup", function(event) {
 	if (event.keyCode === 13){
         submitButton.click();
@@ -97,6 +98,7 @@ function loadImages(request){
 	    	images[i] = new Image();
 	    	images[i].src = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
 	    	images[i].onload = imageLoaded;
+	    	//infoStrings[i] = (!results[i])?"":results[i]['name']+' - '+results[i]['artist']['name'];
 	    }
 }
 
@@ -114,5 +116,12 @@ function imageLoaded(){
 function drawMusaicImage(){
 	for(var i = 0; i < imagesToLoad; i++){
 		ctx.drawImage(images[i], (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
+		/*ctx.font='13px times new roman';
+		ctx.strokeStyle='white';
+		ctx.lineWidth=3;
+		ctx.textBaseline="hanging";
+		ctx.strokeText(infoStrings[i], (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174);
+		ctx.fillStyle='black';
+		ctx.fillText(infoStrings[i], (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174);*/
 	}
 }
