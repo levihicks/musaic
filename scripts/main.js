@@ -1,14 +1,15 @@
-function artist(image, artistName){
+function artist(image, artistName, plays){
 	this.image = new Image();
 	this.image.src = image;
 	this.image.onload = imageLoaded;
 	this.artistName=artistName;
+	this.plays = plays;
 }
 
 
 
-function album(image, albumName, artistName){
-	artist.call(this, image, artistName);
+function album(image, albumName, artistName, plays){
+	artist.call(this, image, artistName, plays);
 	this.albumName = albumName;
 }
 
@@ -115,11 +116,12 @@ function loadImages(request){
 	    for (var i = 0; i < imagesToLoad; i++){
 	    	var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
 	    	var name=(!results[i])?"":results[i]['name'];
+	    	var plays=(!results[i])?"":results[i]['playcount'];
 	    	if(typeString2=="artist")
-	    		albums[i]=new artist(imageLink, name);
+	    		albums[i]=new artist(imageLink, name, plays);
 	    	else{
 	    		var artistName = (!results[i])?"":results[i]['artist']['name'];
-	    		albums[i] = new album(imageLink, name, artistName);
+	    		albums[i] = new album(imageLink, name, artistName, results[i]['playcount']);
 	    	}
 
 	    }
@@ -147,9 +149,14 @@ function drawMusaicImage(){
 		ctx.strokeText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
 		ctx.fillStyle='white';
 		ctx.fillText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
+		var offset=1;
 		if(albums[i].albumName){
 			ctx.strokeText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
 			ctx.fillText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+			offset+=1;
 		}
+		playsString='Plays: '+albums[i].plays;
+		ctx.strokeText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
+		ctx.fillText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
 	}
 }
