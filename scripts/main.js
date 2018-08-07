@@ -1,3 +1,22 @@
+function artist(image, artistName){
+	this.image = new Image();
+	this.image.src = image;
+	this.image.onload = imageLoaded;
+	this.artistName=artistName;
+}
+
+
+
+function album(image, albumName, artistName){
+	artist.call(this, image, artistName);
+	this.albumName = albumName;
+}
+
+album.prototype = Object.create(artist.prototype);
+album.prototype.constructor = album;
+
+var albums=[];
+
 var submitInput = document.getElementById('username');
 var submitText;
 var submitButton = document.querySelector('button[value=Submit');
@@ -71,7 +90,6 @@ function createMusaic(){
 	var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettop'+musaicType.value+'&user=' + 
 	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
 	'&period='+dateRangeChoice.value+'&format=json';
-	console.log(requestURL);
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
 	request.responseType = 'json';
@@ -95,11 +113,15 @@ function loadImages(request){
 	typeString2=typeString2.slice(0, -1);
 	var results = request.response[typeString1][typeString2];
 	    for (var i = 0; i < imagesToLoad; i++){
-	    	images[i] = new Image();
-	    	images[i].src = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
-	    	images[i].onload = imageLoaded;
-	    	infoStrings[i] = (!results[i])?"":results[i]['name']
-	    	infoStrings[i]+=(typeString2=="artist")?"":' - '+results[i]['artist']['name'];
+	    	var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
+	    	var name=(!results[i])?"":results[i]['name'];
+	    	if(typeString2=="artist")
+	    		albums[i]=new artist(imageLink, name);
+	    	else{
+	    		var artistName = (!results[i])?"":results[i]['artist']['name'];
+	    		albums[i] = new album(imageLink, name, artistName);
+	    	}
+
 	    }
 }
 
@@ -116,14 +138,18 @@ function imageLoaded(){
 
 function drawMusaicImage(){
 	for(var i = 0; i < imagesToLoad; i++){
-		ctx.drawImage(images[i], (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
+		ctx.drawImage(albums[i].image, (i % columns.value) * 174,  Math.floor(i/columns.value) * 174);
 		ctx.font='13px arial';
 		ctx.strokeStyle='black';
 		ctx.lineWidth=3;
 		ctx.lineJoin = 'round';
 		ctx.textBaseline="hanging";
-		ctx.strokeText(infoStrings[i], (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
+		ctx.strokeText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
 		ctx.fillStyle='white';
-		ctx.fillText(infoStrings[i], (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
+		ctx.fillText(albums[i].artistName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+2);
+		if(albums[i].albumName){
+			ctx.strokeText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+			ctx.fillText(albums[i].albumName, (i % columns.value) * 174+2,  Math.floor(i/columns.value) * 174+15);
+		}
 	}
 }
