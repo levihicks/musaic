@@ -88,9 +88,15 @@ function createMusaic(){
 	musaicCanvas.setAttribute('height', 174*rows.value);
 	imagesLoaded=0;
 	submitText = submitInput.value;
-	var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettop'+musaicType.value+'&user=' + 
-	submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
-	'&period='+dateRangeChoice.value+'&format=json';
+	if (musaicType.value!='recent'){
+		var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettop'+musaicType.value+'&user=' + 
+		submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
+		'&period='+dateRangeChoice.value+'&format=json';
+	}
+	else{
+		var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+
+		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit=200&format=json';
+	}
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
 	request.responseType = 'json';
@@ -109,12 +115,15 @@ function displayError(request){
 }
 
 function loadImages(request){
-	var typeString1 = 'top'+musaicType.value;
-	var typeString2 = musaicType.value;
-	typeString2=typeString2.slice(0, -1);
+	var typeString1 = (musaicType.value!='recent')?'top'+musaicType.value:'recenttracks';
+	var typeString2 = (musaicType.value!='recent')?musaicType.value:'track';
+	if(typeString2!='track')
+		typeString2=typeString2.slice(0, -1);
 	var results = request.response[typeString1][typeString2];
+	if(typeString2!='track'){
 	    for (var i = 0; i < imagesToLoad; i++){
-	    	var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?"./images/notfound.png":results[i]['image'][2]['#text'];
+	    	var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?
+	    					"./images/notfound.png":results[i]['image'][2]['#text'];
 	    	var name=(!results[i])?"":results[i]['name'];
 	    	var plays=(!results[i])?"":results[i]['playcount'];
 	    	if(typeString2=="artist")
@@ -125,6 +134,25 @@ function loadImages(request){
 	    	}
 
 	    }
+	}
+	else{
+		var added;
+		for (var i = 0; albums.length < imagesToLoad; i++){
+			added = false;
+			albums.forEach(function(el){
+				if(el.albumName==results[i]['album']['#text'] && el.artistName==results[i]['artist']['#text'])
+					added=true;
+			});
+			if (!added){
+				var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?
+								"./images/notfound.png":results[i]['image'][2]['#text'];
+	    		var name=(!results[i])?"":results[i]['album']['#text'];
+	    		var artist = (!results[i])?"":results[i]['artist']['#text'];
+ 				albums.push(new album(imageLink, name, artist, null));
+			}
+		}
+		console.log(albums);
+	}
 }
 
 
@@ -158,10 +186,11 @@ function drawMusaicImage(){
 				offset+=1;
 			}
 		}
-		if(playsOption.checked){
+		if(playsOption.checked && musaicType.value!='recent'){
 			playsString='Plays: '+albums[i].plays;
 			ctx.strokeText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
 			ctx.fillText(playsString, (i % columns.value) * 174+2,  (Math.floor(i/columns.value) * 174)+2+offset*13);
 		}
 	}
+	albums = [];
 }
