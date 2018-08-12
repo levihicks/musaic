@@ -45,6 +45,10 @@ var imagesLoaded;
 var imagesToLoad;
 var perRow;
 var infoStrings = [];
+var limit=200;
+var added;
+var page = 1;
+
 submitInput.addEventListener("keyup", function(event) {
 	if (event.keyCode === 13){
         submitButton.click();
@@ -95,7 +99,7 @@ function createMusaic(){
 	}
 	else{
 		var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+
-		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit=200&format=json';
+		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+limit+'&format=json';
 	}
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
@@ -136,26 +140,42 @@ function loadImages(request){
 	    }
 	}
 	else{
-		var added;
-		for (var i = 0; albums.length < imagesToLoad; i++){
-			added = false;
-			albums.forEach(function(el){
-				if(el.albumName==results[i]['album']['#text'] && el.artistName==results[i]['artist']['#text'])
-					added=true;
-			});
-			if (!added){
-				var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?
-								"./images/notfound.png":results[i]['image'][2]['#text'];
-	    		var name=(!results[i])?"":results[i]['album']['#text'];
-	    		var artist = (!results[i])?"":results[i]['artist']['#text'];
- 				albums.push(new album(imageLink, name, artist, null));
-			}
-		}
-		console.log(albums);
+				findMostRecent(results);
 	}
 }
 
 
+function findMostRecent(results){
+
+	for (var i = 0; albums.length < imagesToLoad && i<limit ; i++){
+		added = false;
+		albums.forEach(function(el){
+			if(el.albumName==results[i]['album']['#text'] && el.artistName==results[i]['artist']['#text'])
+				added=true;
+		});
+		if (!added){
+			var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?
+							"./images/notfound.png":results[i]['image'][2]['#text'];
+    		var name=(!results[i])?"":results[i]['album']['#text'];
+    		var artist = (!results[i])?"":results[i]['artist']['#text'];
+				albums.push(new album(imageLink, name, artist, null));
+		}
+
+	}
+	if (albums.length < imagesToLoad){
+		page+=1;
+		var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+
+		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+limit+'&page='+page+'&format=json';
+		console.log(requestURL);
+		var request = new XMLHttpRequest();
+		request.open('GET', requestURL);
+		request.responseType = 'json';
+		request.send();
+		request.onload = function() {
+			(request.response['error'])?displayError(request):findMostRecent(request.response['recenttracks']['track']);
+		};
+	}
+}
 
 function imageLoaded(){
 	imagesLoaded+=1;
@@ -193,4 +213,5 @@ function drawMusaicImage(){
 		}
 	}
 	albums = [];
+	page = 1;
 }
