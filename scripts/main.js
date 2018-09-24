@@ -96,10 +96,12 @@ function createMusaic(){
 		var requestURL = 'https://ws.audioscrobbler.com/2.0/?method=user.gettop'+musaicType.value+'&user=' + 
 		submitText + '&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+imagesToLoad+
 		'&period='+dateRangeChoice.value+'&format=json';
+		console.log(requestURL);
 	}
 	else{
 		var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+
 		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+limit+'&format=json';
+		console.log(requestURL);
 	}
 	var request = new XMLHttpRequest();
 	request.open('GET', requestURL);
@@ -134,24 +136,25 @@ function loadImages(request){
 	    		albums[i]=new artist(imageLink, name, plays);
 	    	else{
 	    		var artistName = (!results[i])?"":results[i]['artist']['name'];
-	    		albums[i] = new album(imageLink, name, artistName, results[i]['playcount']);
+	    		albums[i] = new album(imageLink, name, artistName, plays);
 	    	}
 
 	    }
 	}
 	else{
-				findMostRecent(results);
+		findMostRecent(results);
 	}
 }
 
 
 function findMostRecent(results){
-
 	for (var i = 0; albums.length < imagesToLoad && i<limit ; i++){
 		added = false;
 		albums.forEach(function(el){
-			if(el.albumName==results[i]['album']['#text'] && el.artistName==results[i]['artist']['#text'])
-				added=true;
+			if(results[i]){
+				if(el.albumName==results[i]['album']['#text'] && el.artistName==results[i]['artist']['#text'])
+					added=true;
+			}
 		});
 		if (!added){
 			var imageLink = (!results[i] || results[i]['image'][2]['#text']=="")?
@@ -166,7 +169,6 @@ function findMostRecent(results){
 		page+=1;
 		var requestURL = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+
 		submitText+'&api_key=57ee3318536b23ee81d6b27e36997cde&limit='+limit+'&page='+page+'&format=json';
-		console.log(requestURL);
 		var request = new XMLHttpRequest();
 		request.open('GET', requestURL);
 		request.responseType = 'json';
